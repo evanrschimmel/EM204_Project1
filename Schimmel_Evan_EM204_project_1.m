@@ -24,7 +24,7 @@ rho = 0.098; % lb/in^3
 % Define loop parameters for testing inner diameter values
 min_test = 0.6;
 max_test = 1.8;
-step = 0.0001;
+step = 1e-5;
 
 i=0;
 k=0;
