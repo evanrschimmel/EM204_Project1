@@ -22,8 +22,8 @@ tau_max = (tau_shear / FOS); % ksi
 rho = 0.098; % lb/in^3
 
 % Define loop parameters for testing inner diameter values
-min_test = 0.6;
-max_test = 1.8;
+min_test = 0.8;
+max_test = 1.4;
 step = 1e-5;
 
 i=0;
@@ -77,7 +77,7 @@ plot(diam,tau_090,diam,tau_100,diam,tau_125)
 yline(tau_max,'k','Max Allowable Shear Stress')
 xlabel('Diameter [in]')
 ylabel('Shear Stress [ksi]')
-legend('0.090 Wall','0.100 Wall','0.125 Wall')
+legend('0.090" Wall','0.100" Wall','0.125" Wall')
 set(gcf, 'color', 'w')
 
 % Identify all shaft options that have shear stress under allowable value
