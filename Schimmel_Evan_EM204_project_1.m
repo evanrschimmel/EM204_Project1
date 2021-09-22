@@ -24,7 +24,7 @@ rho = 0.098; % lb/in^3
 % Define loop parameters for testing inner diameter values
 min_test = 0.8;
 max_test = 1.4;
-step = 1e-5;
+step = 1e-3;
 
 i=0;
 k=0;
@@ -97,6 +97,7 @@ end
 
 % Write best measurements to new variables
 new_diam = valid(index,1);
+new_rad = new_diam / 2;
 new_wall = valid(index,2);
 new_tau = valid(index,3);
 new_weight = valid(index,4);
@@ -104,7 +105,7 @@ new_FOS = tau_shear / new_tau;
 
 % Print ideal shaft information to command window
 fprintf('--- Ideal shaft information --- \n\n');
-fprintf('Inner Diameter: %7.5f in \n',new_diam);
+fprintf('Inner Radius: %7.5f in \n',new_diam);
 fprintf('Wall Thickness: %7.5f in \n',new_wall);
 fprintf('Shear Stress: %7.5f ksi \n',new_tau);
 fprintf('Factor of Safety: %7.5f ksi \n',new_FOS);
