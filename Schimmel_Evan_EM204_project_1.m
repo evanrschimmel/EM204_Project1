@@ -22,23 +22,22 @@ tau_max = (tau_shear / FOS); % ksi
 rho = 0.098; % lb/in^3
 
 % Define loop parameters for testing inner diameter values
-min_test = 0.8;
-max_test = 1.4;
+min_test = 0.4;
+max_test = 0.7;
 step = 1e-3;
 
 i=0;
 k=0;
-for d = min_test:step:max_test
+for r = min_test:step:max_test
     k=k+1;
-    C = d/2;
-    diam(k) = d;
+    radius(k) = r;
     
     for w = 0.090
         i = i+1;
-        J = (pi*(((C+w)^4)-(C^4)))/2; % in^4
-        tau090 = (T*C)/J; % ksi
-        weight = rho * ((pi*C^2)-(pi*(C-w)^2)) * 12; % lb/ft
-        option(i,1) = d;
+        J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
+        tau090 = (T*r)/J; % ksi
+        weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
+        option(i,1) = r;
         option(i,2) = w;
         option(i,3) = tau090;
         option(i,4) = weight;
@@ -47,10 +46,10 @@ for d = min_test:step:max_test
     
     for w = 0.100
         i = i+1;
-        J = (pi*(((C+w)^4)-(C^4)))/2; % in^4
-        tau100 = (T*C)/J; % ksi
-        weight = rho * ((pi*C^2)-(pi*(C-w)^2)) * 12; % lb/ft
-        option(i,1) = d;
+        J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
+        tau100 = (T*r)/J; % ksi
+        weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
+        option(i,1) = r;
         option(i,2) = w;
         option(i,3) = tau100;
         option(i,4) = weight;
@@ -59,10 +58,10 @@ for d = min_test:step:max_test
     
     for w = 0.125
         i = i+1;
-        J = (pi*(((C+w)^4)-(C^4)))/2; % in^4
-        tau125 = (T*C)/J; % ksi
-        weight = rho * ((pi*C^2)-(pi*(C-w)^2)) * 12; % lb/ft
-        option(i,1) = d;
+        J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
+        tau125 = (T*r)/J; % ksi
+        weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
+        option(i,1) = r;
         option(i,2) = w;
         option(i,3) = tau125;
         option(i,4) = weight;
@@ -73,9 +72,9 @@ end
 
 % Plot diameter and shear stress data for various wall thicknesses
 figure
-plot(diam,tau_090,diam,tau_100,diam,tau_125)
+plot(radius,tau_090,radius,tau_100,radius,tau_125)
 yline(tau_max,'k','Max Allowable Shear Stress')
-xlabel('Diameter [in]')
+xlabel('Radius [in]')
 ylabel('Shear Stress [ksi]')
 legend('0.090" Wall','0.100" Wall','0.125" Wall')
 set(gcf, 'color', 'w')
@@ -96,8 +95,7 @@ end
 [best_weight,index] = min(valid(:,4));
 
 % Write best measurements to new variables
-new_diam = valid(index,1);
-new_rad = new_diam / 2;
+new_rad = valid(index,1);
 new_wall = valid(index,2);
 new_tau = valid(index,3);
 new_weight = valid(index,4);
@@ -105,8 +103,8 @@ new_FOS = tau_shear / new_tau;
 
 % Print ideal shaft information to command window
 fprintf('--- Ideal shaft information --- \n\n');
-fprintf('Inner Radius: %7.5f in \n',new_diam);
+fprintf('Inner Radius: %7.5f in \n',new_rad);
 fprintf('Wall Thickness: %7.5f in \n',new_wall);
 fprintf('Shear Stress: %7.5f ksi \n',new_tau);
-fprintf('Factor of Safety: %7.5f ksi \n',new_FOS);
+fprintf('Factor of Safety: %7.5f \n',new_FOS);
 fprintf('Weight: %7.5f lb/ft \n',new_weight);
