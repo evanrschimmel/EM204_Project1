@@ -1,3 +1,16 @@
+%****************************************************************
+%   Schimmel_Evan_EM204_project_1.m
+%
+%   PROGRAM DESCRIPTION
+%   This program exhaustively calculates the shear stress and
+%   weight of possible shafts for a Cessna 172, selecting
+%   the lightest option that fulfills the design criteria.
+%
+%   WRITTEN BY: Evan Schimmel
+%               09/26/2021
+%
+%****************************************************************
+
 clear all
 close all
 clc
@@ -22,20 +35,17 @@ tau_max = (tau_shear / FOS); % ksi
 rho = 0.098; % lb/in^3
 
 % Define loop parameters for testing inner radius values
-min_test = 0.5; % in
-max_test = 2.0; % in
-step = 1e-4; % in
+min_test = 0.2; % in
+max_test = 1.2; % in
+step = 1e-3; % in
 
 i=0;
 k=0;
-for d = min_test:step:max_test
+for r = min_test:step:max_test
     k=k+1;
     
-    % Calculate radius value for ease
-    r = d/2; % in
-    
-    % Create diameter vector for plotting
-    diam(k) = d; % in
+    % Create radius vector for plotting
+    radius(k) = r; % in
     
     % Loop for 0.090 wall thickness
     for w = 0.090 % in
@@ -45,7 +55,7 @@ for d = min_test:step:max_test
         weight = rho * ((pi*(r+w)^2)-(pi*(r)^2)) * 12; % lb/ft
         
         %  Add values to vector for all shaft options
-        option(i,1) = d;
+        option(i,1) = r;
         option(i,2) = w;
         option(i,3) = tau090;
         option(i,4) = weight;
@@ -62,7 +72,7 @@ for d = min_test:step:max_test
         weight = rho * ((pi*(r+w)^2)-(pi*(r)^2)) * 12; % lb/ft
         
         % Add values to vector for all shaft options
-        option(i,1) = d;
+        option(i,1) = r;
         option(i,2) = w;
         option(i,3) = tau100;
         option(i,4) = weight;
@@ -79,7 +89,7 @@ for d = min_test:step:max_test
         weight = rho * ((pi*(r+w)^2)-(pi*(r)^2)) * 12; % lb/ft
         
         % Add values to vector for all shaft options
-        option(i,1) = d;
+        option(i,1) = r;
         option(i,2) = w;
         option(i,3) = tau125;
         option(i,4) = weight;
@@ -92,9 +102,9 @@ end
 
 % Plot diameter and shear stress data for given wall thickness options
 figure
-plot(diam,tau_090,diam,tau_100,diam,tau_125)
+plot(radius,tau_090,radius,tau_100,radius,tau_125)
 yline(tau_max,'k','Max Allowable Shear Stress')
-xlabel('Inner Diameter [in]')
+xlabel('Inner Radius [in]')
 ylabel('Shear Stress [ksi]')
 legend('0.090" Wall','0.100" Wall','0.125" Wall')
 set(gcf, 'color', 'w')
@@ -115,7 +125,7 @@ end
 [best_weight,index] = min(valid(:,4));
 
 % Write best measurements to new variables
-new_diam = valid(index,1);
+new_radius = valid(index,1);
 new_wall = valid(index,2);
 new_tau = valid(index,3);
 new_weight = valid(index,4);
@@ -123,7 +133,7 @@ new_FOS = tau_shear / new_tau;
 
 % Print ideal shaft information to command window
 fprintf('--- Ideal shaft information --- \n\n');
-fprintf('Inner Diameter: %7.5f in \n',new_diam);
+fprintf('Inner Radius: %7.5f in \n',new_radius);
 fprintf('Wall Thickness: %7.5f in \n',new_wall);
 fprintf('Shear Stress: %7.5f ksi \n',new_tau);
 fprintf('Weight: %7.5f lb/ft \n',new_weight);
