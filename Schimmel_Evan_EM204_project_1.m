@@ -11,7 +11,7 @@ omegaRPM = 2700; % rpm
 omegaRAD = omegaRPM * 1/60 * (2*pi); % rad/s
 
 % Calculate torque in shaft
-T = (Pinlbs / omegaRAD) * 1/1000; % ksi
+T = (Pinlbs / omegaRAD) * 1/1000; % kip-in
 
 % Define FOS and calculate max allowable shear stress
 FOS = 1.5; % unitless
@@ -22,27 +22,30 @@ tau_max = (tau_shear / FOS); % ksi
 rho = 0.098; % lb/in^3
 
 % Define loop parameters for testing inner radius values
-min_test = 0.2; % in
-max_test = 1; % in
-step = 1e-3; % in
+min_test = 1.0; % in
+max_test = 1.4; % in
+step = 1e-5; % in
 
 i=0;
 k=0;
-for r = min_test:step:max_test
+for d = min_test:step:max_test
     k=k+1;
     
-    % Create radius vector for plotting
-    radius(k) = r; % in
+    % Calculate radius value for ease
+    r = d/2; % in
+    
+    % Create diameter vector for plotting
+    diam(k) = d; % in
     
     % Loop for 0.090 wall thickness
     for w = 0.090 % in
         i = i+1;
         J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
-        tau090 = (T*r)/J; % ksi
+        tau090 = (T*(r+w))/J; % ksi
         weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
         
         %  Add values to vector for all shaft options
-        option(i,1) = r;
+        option(i,1) = d;
         option(i,2) = w;
         option(i,3) = tau090;
         option(i,4) = weight;
@@ -55,11 +58,11 @@ for r = min_test:step:max_test
     for w = 0.100 % in
         i = i+1;
         J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
-        tau100 = (T*r)/J; % ksi
+        tau100 = (T*(r+w))/J; % ksi
         weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
         
         % Add values to vector for all shaft options
-        option(i,1) = r;
+        option(i,1) = d;
         option(i,2) = w;
         option(i,3) = tau100;
         option(i,4) = weight;
@@ -72,11 +75,11 @@ for r = min_test:step:max_test
     for w = 0.125 % in
         i = i+1;
         J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
-        tau125 = (T*r)/J; % ksi
+        tau125 = (T*(r+w))/J; % ksi
         weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
         
         % Add values to vector for all shaft options
-        option(i,1) = r;
+        option(i,1) = d;
         option(i,2) = w;
         option(i,3) = tau125;
         option(i,4) = weight;
@@ -89,7 +92,7 @@ end
 
 % Plot diameter and shear stress data for given wall thickness options
 figure
-plot(radius,tau_090,radius,tau_100,radius,tau_125)
+plot(diam,tau_090,diam,tau_100,diam,tau_125)
 yline(tau_max,'k','Max Allowable Shear Stress')
 xlabel('Radius [in]')
 ylabel('Shear Stress [ksi]')
@@ -112,7 +115,7 @@ end
 [best_weight,index] = min(valid(:,4));
 
 % Write best measurements to new variables
-new_rad = valid(index,1);
+new_diam = valid(index,1);
 new_wall = valid(index,2);
 new_tau = valid(index,3);
 new_weight = valid(index,4);
@@ -120,7 +123,7 @@ new_FOS = tau_shear / new_tau;
 
 % Print ideal shaft information to command window
 fprintf('--- Ideal shaft information --- \n\n');
-fprintf('Inner Radius: %7.5f in \n',new_rad);
+fprintf('Inner Diameter: %7.5f in \n',new_diam);
 fprintf('Wall Thickness: %7.5f in \n',new_wall);
 fprintf('Shear Stress: %7.5f ksi \n',new_tau);
 fprintf('Weight: %7.5f lb/ft \n',new_weight);
