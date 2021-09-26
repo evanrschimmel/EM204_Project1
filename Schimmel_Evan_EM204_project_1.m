@@ -22,9 +22,9 @@ tau_max = (tau_shear / FOS); % ksi
 rho = 0.098; % lb/in^3
 
 % Define loop parameters for testing inner radius values
-min_test = 1.0; % in
-max_test = 1.4; % in
-step = 1e-5; % in
+min_test = 0.5; % in
+max_test = 2.0; % in
+step = 1e-4; % in
 
 i=0;
 k=0;
@@ -42,7 +42,7 @@ for d = min_test:step:max_test
         i = i+1;
         J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
         tau090 = (T*(r+w))/J; % ksi
-        weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
+        weight = rho * ((pi*(r+w)^2)-(pi*(r)^2)) * 12; % lb/ft
         
         %  Add values to vector for all shaft options
         option(i,1) = d;
@@ -59,7 +59,7 @@ for d = min_test:step:max_test
         i = i+1;
         J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
         tau100 = (T*(r+w))/J; % ksi
-        weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
+        weight = rho * ((pi*(r+w)^2)-(pi*(r)^2)) * 12; % lb/ft
         
         % Add values to vector for all shaft options
         option(i,1) = d;
@@ -76,7 +76,7 @@ for d = min_test:step:max_test
         i = i+1;
         J = (pi*(((r+w)^4)-(r^4)))/2; % in^4
         tau125 = (T*(r+w))/J; % ksi
-        weight = rho * ((pi*r^2)-(pi*(r-w)^2)) * 12; % lb/ft
+        weight = rho * ((pi*(r+w)^2)-(pi*(r)^2)) * 12; % lb/ft
         
         % Add values to vector for all shaft options
         option(i,1) = d;
@@ -94,7 +94,7 @@ end
 figure
 plot(diam,tau_090,diam,tau_100,diam,tau_125)
 yline(tau_max,'k','Max Allowable Shear Stress')
-xlabel('Radius [in]')
+xlabel('Inner Diameter [in]')
 ylabel('Shear Stress [ksi]')
 legend('0.090" Wall','0.100" Wall','0.125" Wall')
 set(gcf, 'color', 'w')
