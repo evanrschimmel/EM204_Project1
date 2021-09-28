@@ -102,7 +102,7 @@ end
 
 % Plot diameter and shear stress data for given wall thickness options
 figure
-plot(radius,tau_090,radius,tau_100,radius,tau_125)
+plot(radius,tau_090,'k-.',radius,tau_100,'k:',radius,tau_125,'k--')
 yline(tau_max,'k','Max Allowable Shear Stress')
 xlabel('Inner Radius [in]')
 ylabel('Shear Stress [ksi]')
